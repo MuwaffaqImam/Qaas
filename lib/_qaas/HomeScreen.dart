@@ -1,12 +1,19 @@
+import 'dart:collection';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_template/Data_Model/dinner.dart';
 import 'package:food_template/Data_Model/lunch.dart';
 import 'package:food_template/Screen/Template1/B1_Home_Screen/Detail_Home_Screen/Banner_Screen.dart';
 import 'package:food_template/Screen/Template1/B1_Home_Screen/Detail_Home_Screen/Category_Screen.dart';
 import 'package:food_template/Screen/Template1/B1_Home_Screen/Detail_Home_Screen/Detail_Food_Screen.dart';
 import 'package:food_template/Screen/Template1/B1_Home_Screen/Search_Screen/Search_Screen_T1.dart';
+
+import 'bloc/tenants/tenants_bloc.dart';
+import 'models/Tenants.dart';
 
 class HomeScreenT1 extends StatefulWidget {
   HomeScreenT1({Key key}) : super(key: key);
@@ -63,7 +70,7 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              "Hello Alex",
+              "QAAS",
               style: TextStyle(
                   fontFamily: "Sofia",
                   fontWeight: FontWeight.w800,
@@ -90,191 +97,56 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
     ),
   );
 
-  var _categories = Column(
-    mainAxisAlignment: MainAxisAlignment.start,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      Padding(
-        padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                "Categories",
-                style: TextStyle(
-                    fontFamily: "Sofia",
-                    fontSize: 18.5,
-                    color: Colors.white.withOpacity(0.9),
-                    fontWeight: FontWeight.w600),
-              ),
-              Text(
-                "See all",
-                style: TextStyle(
-                    fontFamily: "Sofia",
-                    color: Colors.white54,
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w300),
-              ),
-            ]),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(
-          top: 10.0,
-        ),
-        child: Container(
-          height: 140.0,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: <Widget>[
-              SizedBox(
-                width: 20.0,
-              ),
-              cardPopular(
-                  colorTop: Color(0xFF1E2026),
-                  colorBottom: Color(0xFF23252E),
-                  image: "assets/icon/dinner.png",
-                  title: "Dinner"),
-              cardPopular(
-                  colorTop: Color(0xFF1E2026),
-                  colorBottom: Color(0xFF23252E),
-                  image: "assets/icon/Lunch.png",
-                  title: "Lunch"),
-              cardPopular(
-                colorTop: Color(0xFF1E2026),
-                colorBottom: Color(0xFF23252E),
-                image: "assets/icon/breakfast.png",
-                title: "Breakfast",
-              ),
-              cardPopular(
-                  colorTop: Color(0xFF1E2026),
-                  colorBottom: Color(0xFF23252E),
-                  image: "assets/icon/caffe.png",
-                  title: "Cafe"),
-              cardPopular(
-                  colorTop: Color(0xFF1E2026),
-                  colorBottom: Color(0xFF23252E),
-                  image: "assets/icon/healty.png",
-                  title: "Healtyfood"),
-              InkWell(
-                onTap: () {},
-                child: cardPopular(
-                    colorTop: Color(0xFF1E2026),
-                    colorBottom: Color(0xFF23252E),
-                    image: "assets/icon/fashfood.png",
-                    title: "Fashfood"),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ],
-  );
-
-  var _nearYou = Column(
-    mainAxisAlignment: MainAxisAlignment.start,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      SizedBox(
-        height: 25.0,
-      ),
-      Padding(
-        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                "Near you",
-                style: TextStyle(
-                    fontFamily: "Sofia",
-                    fontSize: 18.5,
-                    color: Colors.white.withOpacity(0.9),
-                    fontWeight: FontWeight.w600),
-              ),
-              Text(
-                "See all",
-                style: TextStyle(
-                    fontFamily: "Sofia",
-                    color: Colors.white54,
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w300),
-              ),
-            ]),
-      ),
-      Container(
-        height: 215.0,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: <Widget>[
-            SizedBox(
-              width: 10.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 15.0),
-              child: Container(
-                height: 265.0,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  primary: false,
-                  itemBuilder: (ctx, index) {
-                    return cardNear(lunchArray[index]);
-                  },
-                  itemCount: lunchArray.length,
+  Widget buildCategoriesView(String cat ,List<Tenant> tenants) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  // tenants.first?.category?.name,
+                  cat,
+                  style: TextStyle(
+                      fontFamily: "Sofia",
+                      fontSize: 18.5,
+                      color: Colors.white.withOpacity(0.9),
+                      fontWeight: FontWeight.w600),
                 ),
-              ),
+                // Text(
+                //   "See all",
+                //   style: TextStyle(
+                //       fontFamily: "Sofia",
+                //       color: Colors.white54,
+                //       fontSize: 15.0,
+                //       fontWeight: FontWeight.w300),
+                // ),
+              ]),
+        ),
+        Padding(
+            padding: const EdgeInsets.only(
+              top: 10.0,
             ),
-          ],
-        ),
-      ),
-    ],
-  );
-
-  var _popular = Column(
-    mainAxisAlignment: MainAxisAlignment.start,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      SizedBox(
-        height: 25.0,
-      ),
-      Padding(
-        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                "Popular",
-                style: TextStyle(
-                    fontFamily: "Sofia",
-                    fontSize: 18.5,
-                    color: Colors.white.withOpacity(0.9),
-                    fontWeight: FontWeight.w600),
-              ),
-              Text(
-                "See all",
-                style: TextStyle(
-                    fontFamily: "Sofia",
-                    color: Colors.white54,
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w300),
-              ),
-            ]),
-      ),
-      Container(
-        child: ListView.builder(
-          padding: EdgeInsets.only(top: 15.0),
-          shrinkWrap: true,
-          primary: false,
-          itemBuilder: (ctx, index) {
-            return cardDinner(dinnerArray[index]);
-          },
-          itemCount: dinnerArray.length,
-        ),
-      ),
-      SizedBox(
-        height: 20.0,
-      ),
-    ],
-  );
+            child: Container(
+              height: 140.0,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (BuildContext context, int index) {
+                    return cardPopular(
+                        colorTop: Color(0xFF1E2026),
+                        colorBottom: Color(0xFF23252E),
+                        image: "assets/icon/bank.png",
+                        title: tenants[index].name);
+                  },
+                  padding: EdgeInsets.only(left: 20),
+                  itemCount: tenants.length),
+            )),
+      ],
+    );
+  }
 
   Widget build(BuildContext context) {
     var _search = Padding(
@@ -369,9 +241,7 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
         children: <Widget>[
           _search,
           _sliderImage,
-          _categories,
-          _nearYou,
-          _popular,
+          blocCategory(),
         ],
       ),
     );
@@ -389,70 +259,30 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
       ),
     );
   }
-}
 
-/// Component category class to set list
-class category extends StatelessWidget {
-  @override
-  String txt, image;
-  GestureTapCallback tap;
-  double padding, sizeImage;
-
-  category({this.txt, this.image, this.tap, this.padding, this.sizeImage});
-
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: tap,
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 15.0, left: 30.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(right: padding),
-                      child: Image.asset(
-                        image,
-                        height: sizeImage,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: Text(
-                        txt,
-                        style: TextStyle(
-                          fontSize: 14.5,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: "Sofia",
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 20.0),
-                  child: Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                    size: 15.0,
-                  ),
-                )
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 20.0,
-          ),
-          Container(
-            height: 0.1,
-            color: Colors.white70,
-          )
-        ],
-      ),
+  Widget blocCategory() {
+    return BlocBuilder<TenantsBloc, TenantsState>(
+      builder: (context, state) {
+        if (state is TenantsLoading)
+          return const CircularProgressIndicator();
+        else if (state is TenantsFailure) {
+          return const Center(child: Text('no posts'));
+        } else {
+          List<Tenant> tenants = (state as TenantsSuccess).tenantsList;
+          HashMap<String, List<Tenant>> map =  HashMap();
+          map.putIfAbsent("Banks", () => tenants);
+          map.putIfAbsent("Government", () => tenants);
+          map.putIfAbsent("Malls", () => tenants);
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: 3,
+            itemBuilder: (BuildContext context, int index) {
+              String key = map.keys.elementAt(index);
+              return buildCategoriesView(key,map[key]);
+            },
+          );
+        }
+      },
     );
   }
 }
@@ -460,6 +290,7 @@ class category extends StatelessWidget {
 class cardPopular extends StatelessWidget {
   Color colorTop, colorBottom;
   String image, title;
+
   cardPopular({this.colorTop, this.colorBottom, this.title, this.image});
 
   @override
@@ -520,248 +351,6 @@ class cardPopular extends StatelessWidget {
                     fontFamily: "Sofia",
                     fontSize: 16.0,
                     fontWeight: FontWeight.w600),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class cardNear extends StatelessWidget {
-  lunch _lunch;
-  cardNear(this._lunch);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(PageRouteBuilder(
-            pageBuilder: (_, __, ___) => new DetailFoodScreenT1(
-                  title: _lunch.title,
-                  id: _lunch.id,
-                  image: _lunch.image,
-                ),
-            transitionDuration: Duration(milliseconds: 1000),
-            transitionsBuilder:
-                (_, Animation<double> animation, __, Widget child) {
-              return Opacity(
-                opacity: animation.value,
-                child: child,
-              );
-            }));
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Hero(
-              tag: 'hero-tag-${_lunch.id}',
-              child: Material(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                child: Container(
-                  height: 110.0,
-                  width: 180.0,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage(_lunch.image), fit: BoxFit.contain),
-                    boxShadow: [
-                      BoxShadow(blurRadius: 0.0, color: Colors.black87)
-                    ],
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    gradient: LinearGradient(colors: [
-                      Color(0xFF1E2026),
-                      Color(0xFF23252E),
-                    ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 5.0,
-            ),
-            Text(
-              _lunch.title,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: "Sofia",
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w600),
-            ),
-            SizedBox(
-              height: 2.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Icon(
-                  Icons.location_on,
-                  size: 18.0,
-                  color: Colors.white70,
-                ),
-                Text(
-                  _lunch.location,
-                  style: TextStyle(
-                      color: Colors.white70,
-                      fontFamily: "Sofia",
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w300),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  Icons.star,
-                  size: 18.0,
-                  color: Colors.yellow,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 3.0),
-                  child: Text(
-                    _lunch.ratting,
-                    style: TextStyle(
-                        color: Colors.white60,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: "Sofia",
-                        fontSize: 13.0),
-                  ),
-                ),
-                SizedBox(
-                  width: 35.0,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class cardDinner extends StatelessWidget {
-  dinner _dinner;
-  cardDinner(this._dinner);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(PageRouteBuilder(
-            pageBuilder: (_, __, ___) => new DetailFoodScreenT1(
-                  title: _dinner.title,
-                  id: _dinner.id,
-                  image: _dinner.image,
-                ),
-            transitionDuration: Duration(milliseconds: 600),
-            transitionsBuilder:
-                (_, Animation<double> animation, __, Widget child) {
-              return Opacity(
-                opacity: animation.value,
-                child: child,
-              );
-            }));
-      },
-      child: Padding(
-        padding: const EdgeInsets.only(top: 15.0, left: 15.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Hero(
-              tag: 'hero-tag-${_dinner.id}',
-              child: Material(
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                color: Color(0xFF1E2026),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: 100.0,
-                    width: 100.0,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(_dinner.image),
-                        fit: BoxFit.contain,
-                      ),
-                      boxShadow: [
-                        BoxShadow(blurRadius: 0.0, color: Colors.black87)
-                      ],
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      gradient: LinearGradient(colors: [
-                        Color(0xFF1E2026),
-                        Color(0xFF23252E),
-                      ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 15.0, top: 25.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    _dinner.title,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: "Sofia",
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(
-                    height: 2.0,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Icon(
-                        Icons.location_on,
-                        size: 18.0,
-                        color: Colors.white70,
-                      ),
-                      Text(
-                        _dinner.location,
-                        style: TextStyle(
-                            color: Colors.white70,
-                            fontFamily: "Sofia",
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w300),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.star,
-                        size: 18.0,
-                        color: Colors.yellow,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 3.0),
-                        child: Text(
-                          _dinner.ratting,
-                          style: TextStyle(
-                              color: Colors.white60,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: "Sofia",
-                              fontSize: 13.0),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
               ),
             ),
           ],

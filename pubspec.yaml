@@ -142,6 +142,7 @@ flutter:
     - assets/Template1/banner/7.jpg
     - assets/Template1/map_style.txt
     - assets/icon/profile.png
+    - assets/icon/bank.png
     - assets/icon/box.png
     - assets/icon/notification.png
     - assets/icon/notificationIlustration.png
