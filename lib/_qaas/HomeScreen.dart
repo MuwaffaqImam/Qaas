@@ -11,6 +11,7 @@ import 'package:food_template/Screen/Template1/B1_Home_Screen/Detail_Home_Screen
 import 'package:food_template/Screen/Template1/B1_Home_Screen/Detail_Home_Screen/Category_Screen.dart';
 import 'package:food_template/Screen/Template1/B1_Home_Screen/Detail_Home_Screen/Detail_Food_Screen.dart';
 import 'package:food_template/Screen/Template1/B1_Home_Screen/Search_Screen/Search_Screen_T1.dart';
+import 'package:food_template/_qaas/res/Colors.dart';
 
 import 'bloc/tenants/tenants_bloc.dart';
 import 'models/Tenants.dart';
@@ -97,7 +98,7 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
     ),
   );
 
-  Widget buildCategoriesView(String cat ,List<Tenant> tenants) {
+  Widget buildCategoriesView(String cat, List<Tenant> tenants) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,10 +136,12 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (BuildContext context, int index) {
-                    return cardPopular(
+                    return TenantCard(
                         colorTop: Color(0xFF1E2026),
                         colorBottom: Color(0xFF23252E),
-                        image: "assets/icon/bank.png",
+                        image: index % 2 == 0
+                            ? "assets/icon/bank2.jpeg"
+                            : "assets/icon/bank.png",
                         title: tenants[index].name);
                   },
                   padding: EdgeInsets.only(left: 20),
@@ -247,7 +250,15 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
     );
 
     return Scaffold(
-      backgroundColor: Color(0xFF1E2026),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xFFFF975D),
+        onPressed: () {},
+        child: const Icon(Icons.qr_code_2_rounded,color: Color(0xFF23252E)),
+        tooltip: 'Create',
+      ),
+      bottomNavigationBar: buildBottomBar(),
+      backgroundColor: Color(0xFF23252E),
       body: SingleChildScrollView(
         child: Stack(
           children: <Widget>[
@@ -260,16 +271,90 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
     );
   }
 
+  Widget buildBottomBar() {
+    return BottomAppBar(
+      shape: const CircularNotchedRectangle(),
+      color: Colors.white12,
+      child: IconTheme(
+        data: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              height: 56,
+              child: Column(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.menu_rounded),
+                    onPressed: () {},
+                  ),
+                  Text('More',style: TextStyle(color: Colors.white),)
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              height: 56,
+              child: Column(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.location_on_rounded),
+                    onPressed: () {},
+                  ),
+                  Text('location',style: TextStyle(color: Colors.white),)
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              height: 56,
+              child: Column(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.event),
+                    onPressed: () {},
+                  ),
+                  Text('Tickets',style: TextStyle(color: Colors.white),)
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              height: 56,
+              child: Column(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.person),
+                    onPressed: () {},
+                  ),
+                  Text('Profile',style: TextStyle(color: Colors.white),)
+                ],
+              ),
+            ),
+
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget blocCategory() {
     return BlocBuilder<TenantsBloc, TenantsState>(
       builder: (context, state) {
         if (state is TenantsLoading)
-          return const CircularProgressIndicator();
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Center(
+                child: const CircularProgressIndicator(
+              color: Colors.amber,
+            )),
+          );
         else if (state is TenantsFailure) {
           return const Center(child: Text('no posts'));
         } else {
           List<Tenant> tenants = (state as TenantsSuccess).tenantsList;
-          HashMap<String, List<Tenant>> map =  HashMap();
+          HashMap<String, List<Tenant>> map = HashMap();
           map.putIfAbsent("Banks", () => tenants);
           map.putIfAbsent("Government", () => tenants);
           map.putIfAbsent("Malls", () => tenants);
@@ -278,7 +363,7 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
             itemCount: 3,
             itemBuilder: (BuildContext context, int index) {
               String key = map.keys.elementAt(index);
-              return buildCategoriesView(key,map[key]);
+              return buildCategoriesView(key, map[key]);
             },
           );
         }
@@ -287,11 +372,11 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
   }
 }
 
-class cardPopular extends StatelessWidget {
+class TenantCard extends StatelessWidget {
   Color colorTop, colorBottom;
   String image, title;
 
-  cardPopular({this.colorTop, this.colorBottom, this.title, this.image});
+  TenantCard({this.colorTop, this.colorBottom, this.title, this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -334,8 +419,7 @@ class cardPopular extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Image.asset(
                       image,
-                      height: 35,
-                      color: Colors.white54,
+                      height: 60,
                     )),
               ),
             ),
