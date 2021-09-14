@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_template/Screen/Template1/Login_Screen/SignIn_Screen.dart';
+import 'package:food_template/Screen/common/dialog/error_dialog.dart';
+import 'package:food_template/_qaas/bloc/login/login_bloc.dart';
+import 'package:food_template/_qaas/bloc/login/login_event.dart';
+import 'package:food_template/_qaas/bloc/login/login_state.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+
 
 class chooseLogin extends StatefulWidget {
   chooseLogin({Key key}) : super(key: key);
@@ -14,11 +21,16 @@ class _chooseLoginState extends State<chooseLogin>
   AnimationController animationController;
   var tapLogin = 0;
   var tapSignup = 0;
+  LoginBloc _loginBloc;
+  ProgressDialog pr;
 
   @override
 
   /// Declare animation in initState
   void initState() {
+    _loginBloc = BlocProvider.of<LoginBloc>(context);
+    pr = new ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
+
     // TODO: implement initState
     /// Animation proses duration
     animationController =
@@ -58,159 +70,230 @@ class _chooseLoginState extends State<chooseLogin>
     mediaQuery.size.width;
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
-        children: <Widget>[
-          ///
-          /// Set background video
-          ///
-          Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage(
-                        "assets/Template1/image/chosseBackground.jpeg"),
-                    fit: BoxFit.cover)),
-          ),
-          Container(
-            child: Container(
-              margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: FractionalOffset(0.0, 0.0),
-                  end: FractionalOffset(0.0, 1.0),
-                  // stops: [0.0, 1.0],
-                  colors: <Color>[
-                    Color(0xFF1E2026).withOpacity(0.1),
-                    Color(0xFF1E2026).withOpacity(0.3),
-                    Colors.black.withOpacity(0.6),
-                    Colors.black.withOpacity(0.7),
-                  ],
-                ),
-              ),
+      body: BlocBuilder<LoginBloc, LoginState>(
+        bloc: _loginBloc,
+        builder: (_, state) {
+          if (state is LoggedSuccess) {
+            //go  to profile
+          } else if (state is LoggedFailure) {
 
-              /// Set component layout
-              child: ListView(
-                padding: EdgeInsets.all(0.0),
-                children: <Widget>[
-                  Stack(
-                    alignment: AlignmentDirectional.bottomCenter,
+            Future.delayed(Duration(milliseconds: 300),(){
+
+              callErrorDialog(context, state.errorMessage);
+            });
+
+
+          }
+
+          return Stack(
+            children: <Widget>[
+              ///
+              /// Set background video
+              ///
+              Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage(
+                            "assets/Template1/image/chosseBackground.jpeg"),
+                        fit: BoxFit.cover)),
+              ),
+              Container(
+                child: Container(
+                  margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: FractionalOffset(0.0, 0.0),
+                      end: FractionalOffset(0.0, 1.0),
+                      // stops: [0.0, 1.0],
+                      colors: <Color>[
+                        Color(0xFF1E2026).withOpacity(0.1),
+                        Color(0xFF1E2026).withOpacity(0.3),
+                        Colors.black.withOpacity(0.6),
+                        Colors.black.withOpacity(0.7),
+                      ],
+                    ),
+                  ),
+
+                  /// Set component layout
+                  child: ListView(
+                    padding: EdgeInsets.all(0.0),
                     children: <Widget>[
                       Stack(
                         alignment: AlignmentDirectional.bottomCenter,
                         children: <Widget>[
-                          Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 20.0, bottom: 170.0),
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 20.0),
-                                    child: Text(
-                                      "DELIVERED\nFAST FOOD\nTO YOUR\nDOOR.",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 37.0,
-                                          fontWeight: FontWeight.w800,
-                                          fontFamily: "Sofia",
-                                          letterSpacing: 1.3),
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 20.0, top: 20.0, right: 20.0),
-                                    child: Text(
-                                      "Set exact location to find the right restaurant near you.",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 17.0,
-                                          fontWeight: FontWeight.w200,
-                                          fontFamily: "Sofia",
-                                          letterSpacing: 1.3),
-                                    ),
-                                  ),
-                                ),
-                                Padding(padding: EdgeInsets.only(top: 220.0)),
-                              ],
-                            ),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            mainAxisSize: MainAxisSize.max,
+                          Stack(
+                            alignment: AlignmentDirectional.bottomCenter,
                             children: <Widget>[
-                              /// To create animation if user tap == animation play (Click to open code)
-                              tapLogin == 0
-                                  ? Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                        splashColor: Colors.white,
-                                        onTap: () {
-                                          setState(() {
-                                            tapLogin = 1;
-                                          });
-                                          _Playanimation();
-                                          return tapLogin;
-                                        },
-                                        child: ButtonCustom(
-                                          txt: "Login",
-                                          gradient1: Color(0xFFFEE140),
-                                          gradient2: Color(0xFFFA709A),
-                                          border: Colors.transparent,
+                              Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 20.0, bottom: 170.0),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 20.0),
+                                        child: Text(
+                                          "DELIVERED\nFAST FOOD\nTO YOUR\nDOOR.",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 37.0,
+                                              fontWeight: FontWeight.w800,
+                                              fontFamily: "Sofia",
+                                              letterSpacing: 1.3),
                                         ),
                                       ),
-                                    )
-                                  : AnimationSplashSignup(
-                                      animationController:
-                                          animationController.view,
                                     ),
-                              Padding(padding: EdgeInsets.only(top: 70.0)),
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20.0, top: 20.0, right: 20.0),
+                                        child: Text(
+                                          "Set exact location to find the right restaurant near you.",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 17.0,
+                                              fontWeight: FontWeight.w200,
+                                              fontFamily: "Sofia",
+                                              letterSpacing: 1.3),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                        padding: EdgeInsets.only(top: 220.0)),
+                                  ],
+                                ),
+                              ),
+                              Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  /// To create animation if user tap == animation play (Click to open code)
+                                  tapLogin == 0
+                                      ? Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                            splashColor: Colors.white,
+                                            onTap: () {
+                                              setState(() {
+                                                tapLogin = 1;
+                                              });
+                                              _Playanimation();
+                                              return tapLogin;
+                                            },
+                                            child: ButtonCustom(
+                                              txt: "Login",
+                                              gradient1: Color(0xFFFEE140),
+                                              gradient2: Color(0xFFFA709A),
+                                              border: Colors.transparent,
+                                            ),
+                                          ),
+                                        )
+                                      : AnimationSplashSignup(
+                                          animationController:
+                                              animationController.view,
+                                        ),
+                                  Padding(padding: EdgeInsets.only(top: 70.0)),
+                                ],
+                              ),
+
+                              /// To create animation if user tap == animation play (Click to open code)
+//                          tapSignup == 0
+//                              ? Material(
+//                                  color: Colors.transparent,
+//                                  child: InkWell(
+//                                    splashColor: Colors.white,
+//                                    onTap: () {
+//                                      _loginBloc.add(LoginWithFacebook());
+//
+////                                      setState(() {
+////                                        tapSignup = 1;
+////                                      });
+////
+//////                                      _Playanimation();
+////                                      return tapSignup;
+//                                    },
+//                                    child: ButtonCustom(
+//                                      txt: "Connect with Faceboock",
+//                                      gradient1: Colors.blue,
+//                                      gradient2: Colors.blueAccent,
+//                                      border: Colors.transparent,
+//                                    ),
+//                                  ),
+//                                )
+//                              : AnimationSplashLogin(
+//                                  animationController: animationController.view,
+//                                ),
+
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  splashColor: Colors.white,
+                                  onTap: () {
+                                    _loginBloc.add(LoginWithGoogle());
+
+//
+                                  },
+                                  child: ButtonCustom(
+                                    txt: "Connect with Google",
+                                    gradient1: Colors.red,
+                                    gradient2: Colors.redAccent,
+                                    border: Colors.transparent,
+                                  ),
+                                ),
+                              )
                             ],
                           ),
-
-                          /// To create animation if user tap == animation play (Click to open code)
-                          tapSignup == 0
-                              ? Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    splashColor: Colors.white,
-                                    onTap: () {
-                                      setState(() {
-                                        tapSignup = 1;
-                                      });
-                                      _Playanimation();
-                                      return tapSignup;
-                                    },
-                                    child: ButtonCustom(
-                                      txt: "Connect with Faceboock",
-                                      gradient1: Colors.blue,
-                                      gradient2: Colors.blueAccent,
-                                      border: Colors.transparent,
-                                    ),
-                                  ),
-                                )
-                              : AnimationSplashLogin(
-                                  animationController: animationController.view,
-                                ),
                         ],
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ],
+              state is LoginLoading?Center(child: CircularProgressIndicator(),):Container()
+            ],
+          );
+        },
       ),
     );
+  }
+
+  dynamic callErrorDialog(BuildContext context, String text) {
+    showDialog<dynamic>(
+        context: context,
+        builder: (BuildContext context) {
+          return ErrorDialog(
+            message: text,
+          );
+        });
+  }
+
+  void _loading() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: new Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              new CircularProgressIndicator(),
+              new Text("Loading"),
+            ],
+          ),
+        );
+      },
+    );
+
   }
 }
 

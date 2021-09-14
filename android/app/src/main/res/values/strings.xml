@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Qaas</string>
+    <string name="facebook_app_id">934030133669591</string>
+    <string name="fb_login_protocol_scheme">fb934030133669591</string>
+    <string name="android__admob_ads_id_key">ca-app-pub-8907881762519005~2560212710</string>
+</resources>

@@ -45,6 +45,16 @@ dependencies:
   provider: ^5.0.0
   http: ^0.12.2
   flutter_bloc: ^7.1.0
+  equatable: ^2.0.0
+  flutter_facebook_auth: ^2.0.2
+  firebase_auth: ^0.16.0
+  firebase_messaging: 6.0.13
+  google_sign_in: 4.4.4
+#  google_sign_in: ^5.1.0
+
+  progress_dialog: ^1.2.0
+
+
 
 dev_dependencies:
   flutter_test:

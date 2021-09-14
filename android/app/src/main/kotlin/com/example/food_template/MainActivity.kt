@@ -1,4 +1,4 @@
-package com.example.food_template
+package com.company.qaas
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

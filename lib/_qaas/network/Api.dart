@@ -1,4 +1,5 @@
 class Api {
-  static const String BASE_URL = "qaas-api.azurewebsites.net";
+  static const String BASE_URL = "https://qaas-api.azurewebsites.net";
   static const String GET_TENANTS = '/Tenant';
+  static const String REGISTER = '/Accounts/register';
 }
