@@ -250,6 +250,7 @@ class _chooseLoginState extends State<chooseLogin>
                                     border: Colors.transparent,
                                   ),
                                 ),
+
                               )
                             ],
                           ),
