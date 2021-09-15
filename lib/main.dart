@@ -6,6 +6,7 @@ import 'package:food_template/_qaas/bloc/tenants/tenants_bloc.dart';
 
 import 'Screen/Template1/Login_Screen/SignIn_Screen.dart';
 import 'Screen/Template1/OnBoarding_Screen/Choose_Login.dart';
+import 'Screen/Template1/qr_scanner.dart';
 import '_qaas/bloc/login/login_bloc.dart';
 import '_qaas/bloc/login/login_state.dart';
 import '_qaas/models/Tenants.dart';
@@ -19,13 +20,13 @@ Future<void> main()  async {
 class MainApp extends MaterialApp {
   MainApp()
 //      : super(home: PostsPage());
-//      : super(home: signinTemplate1());
-      : super(
-      home:
-      BlocProvider(
-        create: (context) => LoginBloc(InitialState()),
-        child: chooseLogin(),
-      ));
+      : super(home: ScanQr());
+//      : super(
+//      home:
+//      BlocProvider(
+//        create: (context) => LoginBloc(InitialState()),
+//        child: chooseLogin(),
+//      ));
 }
 
 class PostsPage extends StatelessWidget {

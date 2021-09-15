@@ -49,10 +49,14 @@ dependencies:
   flutter_facebook_auth: ^2.0.2
   firebase_auth: ^0.16.0
   firebase_messaging: 6.0.13
-  google_sign_in: 4.4.4
+#  google_sign_in: 4.4.4
+  google_sign_in: ^5.0.0-nullsafety
 #  google_sign_in: ^5.1.0
 
   progress_dialog: ^1.2.0
+  qr_flutter:
+  qr_code_scanner: ^0.4.0
+  vibration: ^1.7.3
 
 
 

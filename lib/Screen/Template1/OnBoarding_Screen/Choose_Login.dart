@@ -6,6 +6,8 @@ import 'package:food_template/_qaas/bloc/login/login_bloc.dart';
 import 'package:food_template/_qaas/bloc/login/login_event.dart';
 import 'package:food_template/_qaas/bloc/login/login_state.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:food_template/Screen/Template4/Style/ThemeT4.dart' as Style;
+
 
 
 class chooseLogin extends StatefulWidget {
@@ -260,7 +262,10 @@ class _chooseLoginState extends State<chooseLogin>
                   ),
                 ),
               ),
-              state is LoginLoading?Center(child: CircularProgressIndicator(),):Container()
+              state is LoginLoading?Center(child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Style.Colors.mainColor),
+
+              ),):Container()
             ],
           );
         },

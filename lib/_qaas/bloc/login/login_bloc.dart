@@ -92,98 +92,105 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  Future<LoginState> loginWithGoogle()  async {
+  Future<LoginState> loginWithGoogle() async {
 
-     FirebaseUser user = await _getFirebaseUserWithGoogleId();
+    String email,uid = '';
 
-    if (user != null) {
+    try{
+      final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
 
+      if (googleUser != null) {
 
-      /// Got Firebase User
+        email = googleUser.email;
 
-      /// Show Progress Dialog
-
-      /// Submit to backend
-      ///
-      RegisterRequestModel registerRequest = RegisterRequestModel(
-          username: user.uid, email: user.email, password: '', locationId: '');
-
-      RegisterResponseModel result = await _register(registerRequest);
-
-      if (result.status == 'success') {
-        /// go to profile
-        return LoggedSuccess();
-      } else
-        /// Error from server
-        return LoggedFailure('Error from server ' + result.message);
-    } else {
-     /// firebase error
-      return LoggedFailure('Firebase User is null');
-    }
-  }
-}
-
-Future<FirebaseUser> _getFirebaseUserWithGoogleId() async {
-
-  try {
-
-    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-
-    final GoogleSignInAuthentication googleAuth =
+        // get token
+        final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
 
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
+        if (googleAuth.idToken != null && googleAuth.accessToken != null) {
+          final AuthCredential credential = GoogleAuthProvider.getCredential(
+            accessToken: googleAuth.accessToken,
+            idToken: googleAuth.idToken,
+          );
 
-    final FirebaseUser user =
-        (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+          final FirebaseUser user =
+              (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+
+          uid = user.uid;
+          /////////////////////////////////////////////////////////////////////////////////
+
+          print('User id : ${user.uid}');
+          print('email id : ${googleUser.email}');
+
+          if (user != null && googleUser !=null) {
+            /// Got Firebase User
+
+            /// Show Progress Dialog
+
+            /// Submit to backend
+
+            return LoggedFailure('Error from server ');
+//            RegisterRequestModel registerRequest = RegisterRequestModel(
+//                username: uid, email: email, password: '', locationId: '');
+//
+//            RegisterResponseModel result = await _register(registerRequest);
+//
+//
+//            if (result.status == 'success') {
+//              /// go to profile
+//              return LoggedSuccess();
+//            } else
+//
+//              /// Error from server
+//              return LoggedFailure('Error from server ' + result.message);
+          } else {
+            /// firebase error
+            return LoggedFailure('Firebase User is null');
+          }
+
+        }
+
+      }
+    }catch (Exception) {
+      print('not select google account');
+//      return LoggedFailure(Exception.toString());
+    }
 
 
-
-
-    /////////////////////////////////////////////////////////////////////////////////
-
-    print('User id : ${user.uid}');
-    print('email id : ${user.email}');
-
-    return null;
-
-  } catch (Exception) {
-    print('not select google account');
-    print(Exception.toString());
-    return null;
   }
 }
+
+
 
 ///////////////////////////////////////////
 Future<RegisterResponseModel> _register(RegisterRequestModel model) async {
-
-
   print('${Api.BASE_URL}${Api.REGISTER}');
+
+
   http.Response response = await http.post(
-        '${Api.BASE_URL}${Api.REGISTER}',
-      body: RegisterRequestModel().toMap(model),
-    );
+    '${Api.BASE_URL}${Api.REGISTER}',
+    body: RegisterRequestModel().toMap(model),
 
+  );
 
-
+  print('response....');
   print(response.statusCode);
 
   if (response.statusCode > 200 && response.statusCode < 400) {
-
-
     final body = json.decode(response.body);
 
     RegisterResponseModel registerResponseModel =
         RegisterResponseModel().fromMap(body);
 
-
-
     return registerResponseModel;
-  } else {
-    return RegisterResponseModel();
+  } else
+    if (response.statusCode < 200 || response.statusCode > 400 || json == null) {
 
-  }
+
+      throw new Exception("Error while fetching data");
+
+
+    }
+//    return RegisterResponseModel();
+
 }
