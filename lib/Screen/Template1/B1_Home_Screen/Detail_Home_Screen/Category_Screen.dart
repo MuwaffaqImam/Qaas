@@ -1,10 +1,51 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_template/Data_Model/categoryDetail.dart';
+import 'package:food_template/_qaas/bloc/tenants/tenants_bloc.dart';
+import 'package:food_template/_qaas/models/Branch.dart';
+
+
+class BlocCat extends StatelessWidget {
+  const BlocCat({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: BlocBuilder<TenantsBloc, TenantsState>(
+        builder: (context, state) {
+          if (state is Loading)
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                  child: const CircularProgressIndicator(
+                    color: Colors.amber,
+                  )),
+            );
+          else if (state is Failure) {
+            return const Center(child: Text('Error'));
+          } else {
+            List<Branch> branches = (state as TenantsBranchesSuccess)
+                .branchesList;
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: branches.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Text(branches[index].name);
+              },
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
 
 class CategoryScreenT1 extends StatefulWidget {
   String title;
+
   CategoryScreenT1({this.title});
 
   @override

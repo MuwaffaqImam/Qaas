@@ -1,17 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_template/_qaas/HomeScreen.dart';
-import 'package:food_template/_qaas/bloc/tenants/tenants_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import '_qaas/bloc/tenants/tenants_bloc.dart';
 
-import '_qaas/models/Tenants.dart';
+
 
 void main() => runApp(MainApp());
 
-class MainApp extends MaterialApp {
-  MainApp() : super(home: PostsPage());
+class MainApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+   return  MaterialApp(
+      title: 'طابور',
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('ar', ''), // English, no country code
+      ],
+      home: MyStartingHomePage(),
+    );
+  }
+
 }
 
-class PostsPage extends StatelessWidget {
+class MyStartingHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

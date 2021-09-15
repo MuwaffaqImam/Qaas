@@ -11,7 +11,9 @@ import 'package:food_template/Screen/Template1/B1_Home_Screen/Detail_Home_Screen
 import 'package:food_template/Screen/Template1/B1_Home_Screen/Detail_Home_Screen/Category_Screen.dart';
 import 'package:food_template/Screen/Template1/B1_Home_Screen/Detail_Home_Screen/Detail_Food_Screen.dart';
 import 'package:food_template/Screen/Template1/B1_Home_Screen/Search_Screen/Search_Screen_T1.dart';
+import 'package:food_template/_qaas/locale/LocaleManager.dart';
 import 'package:food_template/_qaas/res/Colors.dart';
+import 'package:food_template/_qaas/res/Fonts.dart';
 
 import 'bloc/tenants/tenants_bloc.dart';
 import 'models/Tenants.dart';
@@ -71,9 +73,9 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              "QAAS",
+              LocalManager.translate(word: "طابور"),
               style: TextStyle(
-                  fontFamily: "Sofia",
+                  fontFamily: Fonts.elMessriFamily,
                   fontWeight: FontWeight.w800,
                   fontSize: 30.0,
                   letterSpacing: 1.5,
@@ -137,12 +139,14 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (BuildContext context, int index) {
                     return TenantCard(
-                        colorTop: Color(0xFF1E2026),
-                        colorBottom: Color(0xFF23252E),
-                        image: index % 2 == 0
-                            ? "assets/icon/bank2.jpeg"
-                            : "assets/icon/bank.png",
-                        title: tenants[index].name);
+                      colorTop: Color(0xFF1E2026),
+                      colorBottom: Color(0xFF23252E),
+                      image: index % 2 == 0
+                          ? "assets/icon/bank2.jpeg"
+                          : "assets/icon/bank.png",
+                      title: tenants[index].name,
+                      tenantId: tenants[index].id,
+                    );
                   },
                   padding: EdgeInsets.only(left: 20),
                   itemCount: tenants.length),
@@ -183,7 +187,7 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
                     width: 10.0,
                   ),
                   Text(
-                    "Search",
+                    LocalManager.translate(word: "إبحث"),
                     style: TextStyle(
                         fontFamily: "Sofia",
                         fontWeight: FontWeight.w400,
@@ -254,7 +258,7 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xFFFF975D),
         onPressed: () {},
-        child: const Icon(Icons.qr_code_2_rounded,color: Color(0xFF23252E)),
+        child: const Icon(Icons.qr_code_2_rounded, color: Color(0xFF23252E)),
         tooltip: 'Create',
       ),
       bottomNavigationBar: buildBottomBar(),
@@ -289,7 +293,10 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
                     icon: const Icon(Icons.menu_rounded),
                     onPressed: () {},
                   ),
-                  Text('More',style: TextStyle(color: Colors.white),)
+                  Text(
+                    'More',
+                    style: TextStyle(color: Colors.white),
+                  )
                 ],
               ),
             ),
@@ -302,7 +309,10 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
                     icon: const Icon(Icons.location_on_rounded),
                     onPressed: () {},
                   ),
-                  Text('location',style: TextStyle(color: Colors.white),)
+                  Text(
+                    'location',
+                    style: TextStyle(color: Colors.white),
+                  )
                 ],
               ),
             ),
@@ -315,7 +325,10 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
                     icon: const Icon(Icons.event),
                     onPressed: () {},
                   ),
-                  Text('Tickets',style: TextStyle(color: Colors.white),)
+                  Text(
+                    'Tickets',
+                    style: TextStyle(color: Colors.white),
+                  )
                 ],
               ),
             ),
@@ -328,11 +341,13 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
                     icon: const Icon(Icons.person),
                     onPressed: () {},
                   ),
-                  Text('Profile',style: TextStyle(color: Colors.white),)
+                  Text(
+                    'Profile',
+                    style: TextStyle(color: Colors.white),
+                  )
                 ],
               ),
             ),
-
           ],
         ),
       ),
@@ -342,7 +357,7 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
   Widget blocCategory() {
     return BlocBuilder<TenantsBloc, TenantsState>(
       builder: (context, state) {
-        if (state is TenantsLoading)
+        if (state is Loading)
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Center(
@@ -350,17 +365,15 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
               color: Colors.amber,
             )),
           );
-        else if (state is TenantsFailure) {
+        else if (state is Failure) {
           return const Center(child: Text('no posts'));
         } else {
           List<Tenant> tenants = (state as TenantsSuccess).tenantsList;
-          HashMap<String, List<Tenant>> map = HashMap();
-          map.putIfAbsent("Banks", () => tenants);
-          map.putIfAbsent("Government", () => tenants);
-          map.putIfAbsent("Malls", () => tenants);
+          HashMap<String, List<Tenant>> map =
+              (state as TenantsSuccess).getTenentsGrouped();
           return ListView.builder(
             shrinkWrap: true,
-            itemCount: 3,
+            itemCount: map.length,
             itemBuilder: (BuildContext context, int index) {
               String key = map.keys.elementAt(index);
               return buildCategoriesView(key, map[key]);
@@ -374,9 +387,10 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
 
 class TenantCard extends StatelessWidget {
   Color colorTop, colorBottom;
-  String image, title;
+  String image, title, tenantId;
 
-  TenantCard({this.colorTop, this.colorBottom, this.title, this.image});
+  TenantCard(
+      {this.colorTop, this.colorBottom, this.title, this.image, this.tenantId});
 
   @override
   Widget build(BuildContext context) {
@@ -386,8 +400,10 @@ class TenantCard extends StatelessWidget {
       child: InkWell(
         onTap: () {
           Navigator.of(context).push(PageRouteBuilder(
-              pageBuilder: (_, __, ___) => new CategoryScreenT1(
-                    title: title,
+              pageBuilder: (_, __, ___) => new BlocProvider(
+                    create: (_) => TenantsBloc()..add(TenantBranches(tenantId)),
+                    child: BlocCat(),
+                    // child: new CategoryScreenT1(title: title,),
                   ),
               transitionDuration: Duration(milliseconds: 1000),
               transitionsBuilder:
@@ -432,7 +448,7 @@ class TenantCard extends StatelessWidget {
                 title,
                 style: TextStyle(
                     color: Colors.white70,
-                    fontFamily: "Sofia",
+                    fontFamily: Fonts.tajwalFamily,
                     fontSize: 16.0,
                     fontWeight: FontWeight.w600),
               ),
