@@ -259,7 +259,6 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
         backgroundColor: Color(0xFFFF975D),
         onPressed: () {},
         child: const Icon(Icons.qr_code_2_rounded, color: Color(0xFF23252E)),
-        tooltip: 'Create',
       ),
       bottomNavigationBar: buildBottomBar(),
       backgroundColor: Color(0xFF23252E),
@@ -286,7 +285,7 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8),
-              height: 56,
+              height: 60,
               child: Column(
                 children: [
                   IconButton(
@@ -294,15 +293,15 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
                     onPressed: () {},
                   ),
                   Text(
-                    'More',
-                    style: TextStyle(color: Colors.white),
+                    LocalManager.translate(word: 'القائمة'),
+                    style: TextStyle(color: Colors.white,fontSize: 12),
                   )
                 ],
               ),
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8),
-              height: 56,
+              height: 60,
               child: Column(
                 children: [
                   IconButton(
@@ -310,15 +309,15 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
                     onPressed: () {},
                   ),
                   Text(
-                    'location',
-                    style: TextStyle(color: Colors.white),
+                    LocalManager.translate(word: 'المواقع'),
+                    style: TextStyle(color: Colors.white,fontSize: 12),
                   )
                 ],
               ),
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8),
-              height: 56,
+              height: 60,
               child: Column(
                 children: [
                   IconButton(
@@ -326,15 +325,15 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
                     onPressed: () {},
                   ),
                   Text(
-                    'Tickets',
-                    style: TextStyle(color: Colors.white),
+                    LocalManager.translate(word: 'التذاكر'),
+                    style: TextStyle(color: Colors.white,fontSize: 12),
                   )
                 ],
               ),
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8),
-              height: 56,
+              height: 60,
               child: Column(
                 children: [
                   IconButton(
@@ -342,8 +341,8 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
                     onPressed: () {},
                   ),
                   Text(
-                    'Profile',
-                    style: TextStyle(color: Colors.white),
+                    LocalManager.translate(word: 'الملف الشخصي'),
+                    style: TextStyle(color: Colors.white,fontSize: 12),
                   )
                 ],
               ),
@@ -402,8 +401,7 @@ class TenantCard extends StatelessWidget {
           Navigator.of(context).push(PageRouteBuilder(
               pageBuilder: (_, __, ___) => new BlocProvider(
                     create: (_) => TenantsBloc()..add(TenantBranches(tenantId)),
-                    child: BlocCat(),
-                    // child: new CategoryScreenT1(title: title,),
+                    child: new BranchesScreen(title),
                   ),
               transitionDuration: Duration(milliseconds: 1000),
               transitionsBuilder:

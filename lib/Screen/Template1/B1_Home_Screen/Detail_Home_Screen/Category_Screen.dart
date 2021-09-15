@@ -4,91 +4,71 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_template/Data_Model/categoryDetail.dart';
 import 'package:food_template/_qaas/bloc/tenants/tenants_bloc.dart';
+import 'package:food_template/_qaas/locale/LocaleManager.dart';
 import 'package:food_template/_qaas/models/Branch.dart';
+import 'package:food_template/_qaas/res/Fonts.dart';
 
+class BranchesScreen extends StatelessWidget {
+  final String title;
 
-class BlocCat extends StatelessWidget {
-  const BlocCat({Key key}) : super(key: key);
+  BranchesScreen(this.title);
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocBuilder<TenantsBloc, TenantsState>(
-        builder: (context, state) {
-          if (state is Loading)
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Center(
-                  child: const CircularProgressIndicator(
-                    color: Colors.amber,
-                  )),
-            );
-          else if (state is Failure) {
-            return const Center(child: Text('Error'));
-          } else {
-            List<Branch> branches = (state as TenantsBranchesSuccess)
-                .branchesList;
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: branches.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Text(branches[index].name);
-              },
-            );
-          }
-        },
-      ),
+  Widget recommended() {
+    return BlocBuilder<TenantsBloc, TenantsState>(
+      builder: (context, state) {
+        if (state is Loading)
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Center(
+                child: const CircularProgressIndicator(
+              color: Colors.amber,
+            )),
+          );
+        else if (state is Failure) {
+          return const Center(child: Text('Error'));
+        } else {
+          List<Branch> branches =
+              (state as TenantsBranchesSuccess).branchesList;
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                height: 50.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 22.0),
+                child: Text(
+                  LocalManager.translate(word: 'الفروع'),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: Fonts.elMessriFamily,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w700),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 5.0),
+                child: Container(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    primary: false,
+                    itemBuilder: (ctx, index) {
+                      return cardList(branches[index]);
+                    },
+                    itemCount: branches.length,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20.0,
+              )
+            ],
+          );
+        }
+      },
     );
   }
-}
-
-
-class CategoryScreenT1 extends StatefulWidget {
-  String title;
-
-  CategoryScreenT1({this.title});
-
-  @override
-  _CategoryScreenT1State createState({title}) => _CategoryScreenT1State();
-}
-
-class _CategoryScreenT1State extends State<CategoryScreenT1> {
-  var _recommended = Column(
-    mainAxisAlignment: MainAxisAlignment.start,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      SizedBox(
-        height: 50.0,
-      ),
-      Padding(
-        padding: const EdgeInsets.only(left: 22.0),
-        child: Text(
-          "Recommended",
-          style: TextStyle(
-              color: Colors.white,
-              fontFamily: "Sofia",
-              fontSize: 20.0,
-              fontWeight: FontWeight.w700),
-        ),
-      ),
-      Padding(
-        padding: EdgeInsets.only(left: 5.0),
-        child: Container(
-          child: ListView.builder(
-            shrinkWrap: true,
-            primary: false,
-            itemBuilder: (ctx, index) {
-              return cardList(categoryArray[index]);
-            },
-            itemCount: categoryArray.length,
-          ),
-        ),
-      ),
-      SizedBox(
-        height: 20.0,
-      )
-    ],
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +78,7 @@ class _CategoryScreenT1State extends State<CategoryScreenT1> {
         backgroundColor: Color(0xFF1E2026),
         brightness: Brightness.dark,
         title: Text(
-          widget.title,
+          title,
           style: TextStyle(color: Colors.white, fontFamily: "Sofia"),
         ),
         centerTitle: true,
@@ -127,52 +107,6 @@ class _CategoryScreenT1State extends State<CategoryScreenT1> {
       ),
     );
 
-    var _recommendedFood = Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        SizedBox(
-          height: 30.0,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 20.0),
-          child: Text(
-            "Recommended Food",
-            style: TextStyle(
-                fontFamily: "Sofia",
-                fontSize: 18.5,
-                color: Colors.white,
-                fontWeight: FontWeight.w700),
-          ),
-        ),
-        SizedBox(height: 5.0),
-        Container(
-          height: 320.0,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: <Widget>[
-              SizedBox(
-                width: 10.0,
-              ),
-              _card("assets/Template1/banner/3.jpg", "Steak Noodles ",
-                  "Tanzania", "4,3", "dsadsa2", context),
-              _card("assets/Template1/banner/4.jpg", "Burger Cheese",
-                  "New York", "4,1", "gew321", context),
-              _card("assets/Template1/banner/1.jpg", "Mount Kilimanjaro",
-                  "Nepal", "4,2", "213asd", context),
-              _card("assets/Template1/banner/2.jpg", "Steak Pepper", "Chicago",
-                  "4,7", "gfd23", context),
-              _card("assets/Template1/banner/5.jpg", "Spicy Soup", "New York",
-                  "4,5", "cds321", context),
-              SizedBox(
-                width: 10.0,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-
     return Scaffold(
       appBar: _appBar,
       backgroundColor: Color(0xFF1E2026),
@@ -182,8 +116,7 @@ class _CategoryScreenT1State extends State<CategoryScreenT1> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             _imageSlider,
-            _recommendedFood,
-            _recommended,
+            recommended(),
           ],
         ),
       ),
@@ -207,9 +140,9 @@ class cardList extends StatelessWidget {
     fontWeight: FontWeight.w600,
   );
 
-  category categoryData;
+  Branch branch;
 
-  cardList(this.categoryData);
+  cardList(this.branch);
 
   Widget build(BuildContext context) {
     return Padding(
@@ -217,7 +150,7 @@ class cardList extends StatelessWidget {
       child: InkWell(
         onTap: () {},
         child: Container(
-          height: 250.0,
+          height: 150.0,
           decoration: BoxDecoration(
               color: Color(0xFF23252E),
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -227,94 +160,61 @@ class cardList extends StatelessWidget {
                     blurRadius: 3.0,
                     spreadRadius: 1.0)
               ]),
-          child: Column(children: [
-            Hero(
-              tag: 'hero-tag-${categoryData.id}',
-              child: Material(
-                color: Color(0xFF1E2026),
-                child: Container(
-                  height: 165.0,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(10.0),
-                        topLeft: Radius.circular(10.0)),
-                    image: DecorationImage(
-                        image: CachedNetworkImageProvider(
-                          categoryData.image,
-                          errorListener: () => new Icon(Icons.error),
-                        ),
-                        fit: BoxFit.cover),
-                  ),
-                  alignment: Alignment.topRight,
-                ),
-              ),
-            ),
+          child: Column(
+              children: [
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                        width: 220.0,
+                        child: Text(
+                          branch.name,
+                          style: _txtStyleTitle,
+                          overflow: TextOverflow.ellipsis,
+                        )),
+                    Padding(padding: EdgeInsets.only(top: 5.0)),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 13.0),
+                      child: Text(
+                        '${branch.countersNumber}',
+                        style: TextStyle(
+                            fontSize: 24.0,
+                            color: Color(0xFFFF975D),
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "Gotik"),
+                      ),
+                    ),
+                    Row(
                       children: <Widget>[
-                        Container(
-                            width: 220.0,
-                            child: Text(
-                              categoryData.title,
-                              style: _txtStyleTitle,
-                              overflow: TextOverflow.ellipsis,
-                            )),
-                        Padding(padding: EdgeInsets.only(top: 5.0)),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              "(" + categoryData.ratting.toString() + ")",
-                              style: _txtStyleSub,
-                            )
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4.9),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Icon(
-                                Icons.location_on,
-                                size: 16.0,
-                                color: Colors.white,
-                              ),
-                              Padding(padding: EdgeInsets.only(top: 3.0)),
-                              Text(categoryData.location, style: _txtStyleSub)
-                            ],
-                          ),
+                        Text(
+                          branch.address ?? 'الأردن - عمان',
+                          style: _txtStyleSub,
                         )
                       ],
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 13.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          categoryData.price,
-                          style: TextStyle(
-                              fontSize: 24.0,
-                              color: Color(0xFFFF975D),
-                              fontWeight: FontWeight.w500,
-                              fontFamily: "Gotik"),
-                        ),
-                        Text("per night",
-                            style: _txtStyleSub.copyWith(fontSize: 11.0))
-                      ],
-                    ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4.9),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.location_on,
+                            size: 16.0,
+                            color: Colors.white,
+                          ),
+                          Padding(padding: EdgeInsets.only(top: 3.0)),
+                          Text(branch.phone ?? '0799999999',
+                              style: _txtStyleSub)
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             )
           ]),

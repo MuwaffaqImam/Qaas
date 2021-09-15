@@ -115,7 +115,7 @@ class itemCard extends StatelessWidget {
       child: InkWell(
         onTap: () {
           Navigator.of(context).push(PageRouteBuilder(
-              pageBuilder: (_, __, ___) => new CategoryScreenT1(
+              pageBuilder: (_, __, ___) => new BranchesScreen(
                     title: title,
                   ),
               transitionDuration: Duration(milliseconds: 1000),
