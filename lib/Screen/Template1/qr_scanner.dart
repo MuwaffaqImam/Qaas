@@ -77,6 +77,7 @@ class _ScanQrState extends State<ScanQr> {
         this.barcode = barcode;
 
 
+
       });
 
 
