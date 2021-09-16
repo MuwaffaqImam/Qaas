@@ -75,9 +75,6 @@ class _ScanQrState extends State<ScanQr> {
     controller.scannedDataStream.listen((barcode) {
       setState(() async {
         this.barcode = barcode;
-
-
-
       });
 
 

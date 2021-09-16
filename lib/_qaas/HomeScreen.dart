@@ -12,6 +12,7 @@ import 'package:food_template/Screen/Template1/B1_Home_Screen/Detail_Home_Screen
 import 'package:food_template/Screen/Template1/B1_Home_Screen/Detail_Home_Screen/Detail_Food_Screen.dart';
 import 'package:food_template/Screen/Template1/B1_Home_Screen/Search_Screen/Search_Screen_T1.dart';
 import 'package:food_template/_qaas/res/Colors.dart';
+import 'package:food_template/_qaas/res/constant.dart';
 
 import 'bloc/tenants/tenants_bloc.dart';
 import 'models/Tenants.dart';
@@ -253,7 +254,10 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xFFFF975D),
-        onPressed: () {},
+        onPressed: () {
+
+          Navigator.pushNamed(context, scan);
+        },
         child: const Icon(Icons.qr_code_2_rounded,color: Color(0xFF23252E)),
         tooltip: 'Create',
       ),
@@ -282,7 +286,7 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8),
-              height: 56,
+              height: 66,
               child: Column(
                 children: [
                   IconButton(
@@ -295,7 +299,7 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8),
-              height: 56,
+              height: 66,
               child: Column(
                 children: [
                   IconButton(
@@ -308,7 +312,7 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8),
-              height: 56,
+              height: 66,
               child: Column(
                 children: [
                   IconButton(
@@ -321,12 +325,15 @@ class _HomeScreenT1State extends State<HomeScreenT1> {
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8),
-              height: 56,
+              height: 66,
               child: Column(
                 children: [
                   IconButton(
                     icon: const Icon(Icons.person),
-                    onPressed: () {},
+                    onPressed: () {
+
+                      Navigator.pushNamed(context, login);
+                    },
                   ),
                   Text('Profile',style: TextStyle(color: Colors.white),)
                 ],

@@ -6,39 +6,45 @@ import 'package:food_template/_qaas/bloc/tenants/tenants_bloc.dart';
 
 import 'Screen/Template1/Login_Screen/SignIn_Screen.dart';
 import 'Screen/Template1/OnBoarding_Screen/Choose_Login.dart';
-import 'Screen/Template1/qr_scanner.dart';
+import 'Screen/Template1/B1_Home_Screen/qr_scanner.dart';
 import '_qaas/bloc/login/login_bloc.dart';
 import '_qaas/bloc/login/login_state.dart';
 import '_qaas/models/Tenants.dart';
+import '_qaas/res/constant.dart';
 
-Future<void> main()  async {
-
-//  WidgetsFlutterBinding.ensureInitialized();
-//  await Firebase.initializeApp();
-  runApp(MainApp());}
+Future<void> main() async {
+  runApp(MainApp());
+}
 
 class MainApp extends MaterialApp {
-  MainApp()
-//      : super(home: PostsPage());
-      : super(home: ScanQr());
-//      : super(
-//      home:
-//      BlocProvider(
-//        create: (context) => LoginBloc(InitialState()),
-//        child: chooseLogin(),
-//      ));
+
+  MainApp() : super(home: PostsPage());
+
 }
 
 class PostsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocProvider(
-        create: (_) => TenantsBloc()..add(TenantList()),
-        child: HomeScreenT1(),
+    return MaterialApp(
+      routes: {
 
+        scan: (context) => ScanQr(),
+        login: (context) =>
+            BlocProvider(
+              create: (context) =>
+                  LoginBloc(InitialState()),
+              child: chooseLogin(),
+            ),
+
+      },
+      home: Scaffold(
+        body: BlocProvider(
+          create: (_) =>
+          TenantsBloc()
+            ..add(TenantList()),
+          child: HomeScreenT1(),
+        ),
       ),
     );
   }
 }
-

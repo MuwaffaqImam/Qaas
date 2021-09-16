@@ -25,6 +25,7 @@ class SplashScreenTemplate1 extends StatelessWidget {
 
     return MaterialApp(
       home: SplashScreenTemplate1Screen(),
+
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           brightness: Brightness.light,

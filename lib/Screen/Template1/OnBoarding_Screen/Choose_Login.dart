@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_template/Screen/Template1/Login_Screen/SignIn_Screen.dart';
@@ -135,7 +136,7 @@ class _chooseLoginState extends State<chooseLogin>
                                   children: <Widget>[
                                     Padding(
                                       padding: const EdgeInsets.only(
-                                          top: 20.0, bottom: 170.0),
+                                          top: 1.0, bottom: 140.0),
                                     ),
                                     Align(
                                       alignment: Alignment.centerLeft,
@@ -236,23 +237,26 @@ class _chooseLoginState extends State<chooseLogin>
 //                                  animationController: animationController.view,
 //                                ),
 
-                              Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  splashColor: Colors.white,
-                                  onTap: () {
-                                    _loginBloc.add(LoginWithGoogle());
+                              Container(
+                                margin: EdgeInsets.only(bottom: 10),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    splashColor: Colors.white,
+                                    onTap: () {
+                                      _loginBloc.add(LoginWithGoogle());
 
 //
-                                  },
-                                  child: ButtonCustom(
-                                    txt: "Connect with Google",
-                                    gradient1: Colors.red,
-                                    gradient2: Colors.redAccent,
-                                    border: Colors.transparent,
+                                    },
+                                    child: ButtonCustom(
+                                      txt: "Connect with Google",
+                                      gradient1: Colors.red,
+                                      gradient2: Colors.redAccent,
+                                      border: Colors.transparent,
+                                    ),
                                   ),
-                                ),
 
+                                ),
                               )
                             ],
                           ),
